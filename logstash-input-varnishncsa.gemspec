@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.description     = "This gem is a logstash plugin required to be installed on top of the Logstash core pipeline using $LS_HOME/bin/plugin install gemname. This gem is not a stand-alone program"
   s.authors         = ["hans moulron"]
   s.email           = 'hans.moulron@francetv.fr'
-  s.homepage        = "https://gitlab.ftven.net/exploit/logstash-input-varnishncsa"
+  s.homepage        = "https://github.com/francetv/logstash-input-varnishncsa"
   s.require_paths = ["lib"]
 
   # Files
