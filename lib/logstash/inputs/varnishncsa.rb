@@ -300,7 +300,7 @@ class LogStash::Inputs::Varnishncsa < LogStash::Inputs::Threadable
         event["X-Forwarded-For"] = headers['X-Forwarded-For']
         event["hitmiss"]         = @lp[:df_hitmiss]
         event["handling"]        = @lp[:df_handling]
-        event["headers"]         = headers.map {|header| header.lowercase}
+        event["headers"]         = headers
         begin
           payload = event.to_json
         rescue Encoding::UndefinedConversionError, ArgumentError
