@@ -325,12 +325,4 @@ class LogStash::Inputs::Varnishncsa < LogStash::Inputs::Threadable
       return @@reopen
     end
   end
-
-  public
-  def close
-    finished
-  end # def close
-  def teardown
-    finished
-  end # def teardown
 end # class LogStash::Inputs::Stdin
