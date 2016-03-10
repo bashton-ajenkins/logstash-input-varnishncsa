@@ -10,8 +10,6 @@ class LogStash::Inputs::Varnishncsa < LogStash::Inputs::Threadable
 
   config :instance, :validate => :string, :default => "default"
 
-  trap("SIGINT") { @@reopen = 1}
-
   Logline = Struct.new(
     :df_H,     # %H, Protocol version
     :df_U,     # %U, URL path
@@ -54,10 +52,11 @@ class LogStash::Inputs::Varnishncsa < LogStash::Inputs::Threadable
   end # def register
 
   def run(queue)
-    @q = queue
-    @hostname = Socket.gethostname
-    # callback = Proc.new { |*args| h_ncsa(*args) }
-    Varnish::VSL.VSL_Dispatch(@vd, self.method(:h_ncsa).to_proc, FFI::MemoryPointer.new(:pointer))
+    while !stop? do
+      @q = queue
+      @hostname = Socket.gethostname
+      Varnish::VSL.VSL_Dispatch(@vd, self.method(:h_ncsa).to_proc, FFI::MemoryPointer.new(:pointer))
+    end
   end # def run
 
   private
@@ -263,8 +262,10 @@ class LogStash::Inputs::Varnishncsa < LogStash::Inputs::Threadable
     begin
       str = ptr.read_string(len)
       if spec == :spec_client
+        @logger.debug('Collect client')
         collect_client(tag, str)
       elsif spec == :spec_backend
+        @logger.debug('collect backend')
         collect_backend(tag, str)
       else
         return @@reopen
